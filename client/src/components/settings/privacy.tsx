@@ -36,12 +36,17 @@ function PrivacySettings({ submitProfileUI, user }: PrivacyProps): JSX.Element {
     ...user.profileUI
   });
 
-  const [madeChanges, setMadeChanges] = useState(false);
+  const originalValues = user.profileUI;
+
+  const madeChanges =
+    JSON.stringify(privacyValues) !== JSON.stringify(originalValues);
 
   function toggleFlag(flag: keyof ProfileUI): () => void {
     return () => {
-      setMadeChanges(true);
-      setPrivacyValues({ ...privacyValues, [flag]: !privacyValues[flag] });
+      setPrivacyValues({
+        ...privacyValues,
+        [flag]: !privacyValues[flag]
+      });
     };
   }
 
@@ -49,7 +54,6 @@ function PrivacySettings({ submitProfileUI, user }: PrivacyProps): JSX.Element {
     e.preventDefault();
     if (!madeChanges) return;
     submitProfileUI(privacyValues);
-    setMadeChanges(false);
   }
 
   return (
