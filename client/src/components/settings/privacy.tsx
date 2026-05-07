@@ -40,8 +40,19 @@ function PrivacySettings({ submitProfileUI, user }: PrivacyProps): JSX.Element {
 
   function toggleFlag(flag: keyof ProfileUI): () => void {
     return () => {
-      setMadeChanges(true);
-      setPrivacyValues({ ...privacyValues, [flag]: !privacyValues[flag] });
+      const newValues = {
+        ...privacyValues,
+        [flag]: !privacyValues[flag]
+      };
+
+      const hasChanges = Object.keys(newValues).some(
+        key =>
+          newValues[key as keyof ProfileUI] !==
+          user.profileUI[key as keyof ProfileUI]
+      );
+
+      setMadeChanges(hasChanges);
+      setPrivacyValues(newValues);
     };
   }
 
